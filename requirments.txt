@@ -1,0 +1,13 @@
+Book management: Acquiring, cataloging, and organizing books
+User management: Creating and managing accounts, handling patron information, and providing authentication
+Circulation management: Automating check-in, check-out, reservations, renewals, and holds
+Search and retrieval: Implementing a search mechanism to help users find books, authors, and other resources
+Acquisition and budget management: Managing purchase orders, invoices, vendor information, and budget tracking
+Executive modules: Providing tools for librarians to create reports, such as financial accounting and statistics
+
+Tracking due dates
+Managing fines
+Providing alerts for overdue items
+Storing and retrieving information about patrons, such as their name and ID number
+Allowing patrons to request books that aren't available in the library
+Providing a payment option for membership fees and late fees 
