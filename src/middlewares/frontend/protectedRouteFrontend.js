@@ -5,6 +5,7 @@ import { NextResponse } from "next/server";
 const paths = [
     '/dashboard',
     '/user-management/role-management',
+    '/user-management/users',
 ];
 export const protectedRoute = async (request) => {
     const { pathname } = request.nextUrl;

@@ -23,8 +23,12 @@ function Sidebar() {
                     </a>
                     <div className={`collapse ${pathname.startsWith('/user-management') ? 'show' : ''}`} id="ui-basic">
                         <ul className="nav flex-column sub-menu">
-                            <li className={`nav-item`}> <Link className={`nav-link ${pathname == '/user-management/role-management' ? 'active' : ''}`} href="/user-management/role-management">Role Management</Link></li>
-                            <li className="nav-item"> <a className="nav-link" href="../../pages/ui-features/dropdowns.html">Member Request</a></li>
+                            <li className={`nav-item`}>
+                                <Link className={`nav-link ${pathname == '/user-management/role-management' ? 'active' : ''}`} href="/user-management/role-management">Role Management</Link>
+                            </li>
+                            <li className="nav-item">
+                                <Link  className={`nav-link ${pathname == '/user-management/users' ? 'active' : ''}`} href="/user-management/users">Users</Link>
+                            </li>
                         </ul>
                     </div>
                 </li>

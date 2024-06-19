@@ -5,6 +5,7 @@ import { NextResponse } from "next/server";
 
 const paths = [
     '/api/routes/user-management-api/role-management',
+    '/api/routes/user-management-api/users',
 ]
 export const authTokenChecker = async (request) => {
     const { pathname } = request.nextUrl;

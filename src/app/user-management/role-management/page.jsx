@@ -92,6 +92,11 @@ function Rolemanagement() {
         });
     };
 
+    const editRoles = async (role_name, role_description, role_id) => {
+        setRoleAdderEditorForm({ role_name: role_name, role_description: role_description, role_id: role_id });
+        seterror("");
+    }
+
     return (
         <AuthLayout>
             <div className="card">
@@ -115,7 +120,10 @@ function Rolemanagement() {
                                     <td>{index + 1}</td>
                                     <td>{element.role_name}</td>
                                     <td>{element.role_description}</td>
-                                    <td><button className="btn btn-danger btn-sm" onClick={(e) => { confirmDelete(element._id) }}>Delete</button></td>
+                                    <td className='justify-space-between'>
+                                        <button className="btn btn-warning btn-sm me-2 w-50" data-bs-toggle="modal" data-bs-target="#roleAdderModal"  onClick={(e) => { editRoles(element.role_name, element.role_description, element._id) }}>Edit</button>
+                                        <button className="btn btn-danger btn-sm w-50" onClick={(e) => { confirmDelete(element._id) }}>Delete</button>
+                                    </td>
                                 </tr>
                             ))}
                         </tbody>

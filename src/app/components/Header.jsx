@@ -183,8 +183,8 @@ function Header() {
                         <div className="dropdown-menu dropdown-menu-right navbar-dropdown" aria-labelledby="UserDropdown">
                             <div className="dropdown-header text-center">
                                 <Image className="img-md rounded-circle" height={100} width={100} src={avatar} alt="Profile image" />
-                                <p className="mb-1 mt-3 fw-semibold">Allen Moreno</p>
-                                <p className="fw-light text-muted mb-0">allenmoreno@gmail.com</p>
+                                <p className="mb-1 mt-3 fw-semibold">{cookiesData.user.name}</p>
+                                <p className="fw-light text-muted mb-0">{cookiesData.user.email}</p>
                             </div>
                             <a className="dropdown-item"><i className="dropdown-item-icon mdi mdi-account-outline text-primary me-2"></i> My Profile <span className="badge badge-pill badge-danger">1</span></a>
                             <a className="dropdown-item"><i className="dropdown-item-icon mdi mdi-message-text-outline text-primary me-2"></i> Messages</a>
