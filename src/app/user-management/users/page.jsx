@@ -8,6 +8,7 @@ import React, { useEffect, useState } from 'react';
 function Users() {
     const [roles, setroles] = useState(null);
     const router = useRouter();
+    const [selectedRole, setselectedRole] = useState('');
     useEffect(() => {
         const getRoles = async () => {
             try {
@@ -35,9 +36,17 @@ function Users() {
                     </li>
                 ))}
             </ul>
-            <div className="tab-content" id="myTabContent" style={{borderColor:'transparent'}}>
+            <div className="tab-content" id="myTabContent" style={{ borderColor: 'transparent' }}>
                 {roles && roles.map((element, index) => (
                     <div className={`tab-pane fade ${index == 0 ? 'show active' : ''}`} id={`tab_pane_${element._id}`} role="tabpanel" aria-labelledby={element._id} tabindex="0">
+                        <div className="row">
+                            <div className="col-md-12 text-end m-2">
+                                <button onClick={(e) => { setselectedRole(element.role_name) }} className="btn btn-primary text-uppercase btn-sm" data-bs-toggle="modal" data-bs-target="#userAdderUpdaterModal">
+                                    <i className='fa fa-plus me-2'></i>
+                                    Add {element.role_name}
+                                </button>
+                            </div>
+                        </div>
                         <div class="table-responsive">
                             <table class="table">
                                 <thead>
@@ -84,6 +93,75 @@ function Users() {
                         </div>
                     </div>
                 ))}
+            </div>
+            <div class="modal fade" id="userAdderUpdaterModal" tabindex="-1" aria-labelledby="userAdderUpdaterModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered modal-xl">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h1 class="modal-title fs-5" id="userAdderUpdaterModalLabel">Add {selectedRole}</h1>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <form className='forms-sample'>
+                                <div className="row">
+                                    <div className="col-3 form-group">
+                                        <label htmlFor="" className="">First Name</label>
+                                        <input type="text" name='first_name' placeholder='Jone' className="form-control" />
+                                    </div>
+                                    <div className="col-3 form-group">
+                                        <label htmlFor="" className="">Last Name</label>
+                                        <input type="text" name='last_name' placeholder='Doe' className="form-control" />
+                                    </div>
+                                    <div className="col-3 form-group">
+                                        <label htmlFor="" className="">Date Of Birth</label>
+                                        <input type="text" name='dob' placeholder='DD-MM-YYYY' className="form-control" />
+                                    </div>
+                                    <div className="col-3 form-group">
+                                        <label htmlFor="" className="">Gender</label>
+                                        <select name="gender" className="form-control">
+                                            <option value="" style={{ display: 'none' }}>Select Gender</option>
+                                            <option value="male">Male</option>
+                                            <option value="female" >Female</option>
+                                            <option value="others" >Others</option>
+                                        </select>
+                                    </div>
+                                    <div className="col-3 form-group">
+                                        <label htmlFor="" className="">Email</label>
+                                        <input type="email" name='email' placeholder='test@email.com' className="form-control" />
+                                    </div>
+                                    <div className="col-3 form-group">
+                                        <label htmlFor="" className="">Phone</label>
+                                        <input type="number" name='phone' placeholder='12345678' className="form-control" />
+                                    </div>
+                                    <div className="col-3 form-group">
+                                        <label htmlFor="" className="">Address</label>
+                                        <input type="text" name='address' placeholder='Address' className="form-control" />
+                                    </div>
+                                    <div className="col-3 form-group">
+                                        <label htmlFor="" className="">Card Number</label>
+                                        <input type="text" readOnly name='card_number' placeholder='12345678' className="form-control" />
+                                    </div>
+                                    <div className="col-3 form-group">
+                                        <label htmlFor="" className="">Role Type</label>
+                                        <input type="text" name='role_type' value={selectedRole} readOnly className="form-control" />
+                                    </div>
+                                    <div className="col-3 form-group">
+                                        <label htmlFor="" className="">Start Date</label>
+                                        <input type="text" name='start_date' value={new Date().toLocaleDateString('en-IN', {day:'numeric',month:'long',year:'numeric'})} readOnly className="form-control" />
+                                    </div>
+                                    <div className="col-3 form-group">
+                                        <label htmlFor="" className="">Identity Card Image</label>
+                                        <input type="file" name="id_card" id="id_card" className="form-control" />
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Close</button>
+                            <button type="button" class="btn btn-primary btn-sm">Save changes</button>
+                        </div>
+                    </div>
+                </div>
             </div>
         </AuthLayout>
     );
