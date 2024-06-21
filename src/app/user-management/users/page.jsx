@@ -4,11 +4,14 @@ import axios from 'axios';
 import Cookies from 'js-cookie';
 import { useRouter } from 'next/navigation';
 import React, { useEffect, useState } from 'react';
+import { toast } from 'react-toastify';
 
 function Users() {
     const [roles, setroles] = useState(null);
     const router = useRouter();
-    const [selectedRole, setselectedRole] = useState('');
+    const [selectedRole, setselectedRole] = useState('Administrator');
+    const [allUsers, setallUsers] = useState(null);
+    const [apiUsers, setapiUsers] = useState(null);
     const [newUserData, setnewUserData] = useState({
         "first_name": '',
         "last_name": '',
@@ -26,34 +29,60 @@ function Users() {
     useEffect((e) => {
         setnewUserData({ ...newUserData, 'role_type': selectedRole })
     }, [selectedRole])
+
     const changeNewUserInput = (e) => {
         e.preventDefault();
         const { name, value } = e.target;
-        console.log(name);
         if (name !== 'id_card')
             setnewUserData({ ...newUserData, [name]: value })
         else
             setnewUserData({ ...newUserData, [name]: e.target.files[0] })
 
     }
+
     useEffect(() => {
-        const getRoles = async () => {
-            try {
-                let response = await axios.get('/api/routes/user-management-api/role-management', {
-                    headers: {
-                        "Content-Type": 'application/json',
-                        "Authorization": Cookies.get('token')
-                    }
-                })
-                setroles(response.data.roles);
-            } catch (error) {
-                if (error.response.status === 401) {
-                    return router.push('/login');
+        getRoles();
+        getAllUsers();
+    }, []);
+
+    const getRoles = async () => {
+        try {
+            let response = await axios.get('/api/routes/user-management-api/role-management', {
+                headers: {
+                    "Content-Type": 'application/json',
+                    "Authorization": Cookies.get('token')
                 }
+            })
+            setroles(response.data.roles);
+        } catch (error) {
+            if (error.response.status === 401) {
+                return router.push('/login');
             }
         }
-        getRoles();
-    }, []);
+    }
+
+    const getAllUsers = async () => {
+        let response = await axios.get('/api/routes/user-management-api/users', {
+            headers: {
+                Authorization: Cookies.get('token'),
+            }
+        })
+        setapiUsers(response.data);
+        filterUser(response.data, selectedRole)
+    }
+
+    const filterUser = (data, role_name) => {
+        let flag = false;
+        data.forEach(element => {
+            if (element._id.toLowerCase() == role_name.toLowerCase()) {
+                flag = true;
+                setallUsers(element.users);
+            }
+            if (flag == false) {
+                setallUsers([]);
+            }
+        });
+    }
 
     const newUserCreation = async (e) => {
         e.preventDefault();
@@ -67,14 +96,33 @@ function Users() {
                 Authorization: Cookies.get('token'),
             }
         })
-        console.log(response.data);
+        if (response.data.status == 1)
+            toast.success(response.data.message)
+        else
+            toast.error(response.data.message)
+
+        setnewUserData({
+            "first_name": '',
+            "last_name": '',
+            "dob": '',
+            "gender": '',
+            "email": '',
+            "phone": '',
+            "address": '',
+            "card_number": '',
+            "role_type": "",
+            "start_date": new Date().toLocaleDateString('en-IN', { day: 'numeric', month: 'long', year: 'numeric' }),
+            "id_card": '',
+        });
+        document.querySelector('.close_modal').click();
     }
+
     return (
         <AuthLayout>
             <ul className="nav nav-tabs" id="myTab" role="tablist">
                 {roles && roles.map((element, index) => (
                     <li className="nav-item" role="presentation">
-                        <button className={`nav-link ${index == 0 ? 'active' : ''}`} id={element._id} data-bs-toggle="tab" data-bs-target={`#tab_pane_${element._id}`} type="button" role="tab" aria-controls={`tab_pane_${element._id}`} aria-selected="true">{element.role_name}</button>
+                        <button className={`nav-link ${index == 0 ? 'active' : ''}`} id={element._id} data-bs-toggle="tab" data-bs-target={`#tab_pane_${element._id}`} type="button" role="tab" aria-controls={`tab_pane_${element._id}`} onClick={() => { setselectedRole(element.role_name), filterUser(apiUsers, element.role_name) }} aria-selected="true">{element.role_name}</button>
                     </li>
                 ))}
             </ul>
@@ -93,43 +141,34 @@ function Users() {
                             <table class="table">
                                 <thead>
                                     <tr>
-                                        <th>Profile</th>
-                                        <th>VatNo.</th>
-                                        <th>Created</th>
-                                        <th>Status</th>
+                                        <th>Name</th>
+                                        <th>DOB</th>
+                                        <th>Gender</th>
+                                        <th>Email</th>
+                                        <th>Phone</th>
+                                        <th>Address</th>
+                                        <th>Card Number</th>
+                                        <th>Date of Join</th>
+                                        <th>Action</th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr>
-                                        <td>Jacob</td>
-                                        <td>53275531</td>
-                                        <td>12 May 2017</td>
-                                        <td><label class="badge badge-danger">Pending</label></td>
-                                    </tr>
-                                    <tr>
-                                        <td>Messsy</td>
-                                        <td>53275532</td>
-                                        <td>15 May 2017</td>
-                                        <td><label class="badge badge-warning">In progress</label></td>
-                                    </tr>
-                                    <tr>
-                                        <td>John</td>
-                                        <td>53275533</td>
-                                        <td>14 May 2017</td>
-                                        <td><label class="badge badge-info">Fixed</label></td>
-                                    </tr>
-                                    <tr>
-                                        <td>Peter</td>
-                                        <td>53275534</td>
-                                        <td>16 May 2017</td>
-                                        <td><label class="badge badge-success">Completed</label></td>
-                                    </tr>
-                                    <tr>
-                                        <td>Dave</td>
-                                        <td>53275535</td>
-                                        <td>20 May 2017</td>
-                                        <td><label class="badge badge-warning">In progress</label></td>
-                                    </tr>
+                                    {allUsers && allUsers.map((element) => (
+                                        <tr>
+                                            <td>{element.first_name} {element.last_name}</td>
+                                            <td>{element.dob}</td>
+                                            <td>{element.gender.toUpperCase()}</td>
+                                            <td>{element.email}</td>
+                                            <td>{element.phone}</td>
+                                            <td>{element.address}</td>
+                                            <td>{element.card_number}</td>
+                                            <td>{element.start_date}</td>
+                                            <td>
+                                                <button className="btn btn-danger btn-sm">Delete</button>
+                                            </td>
+                                        </tr>
+
+                                    ))}
                                 </tbody>
                             </table>
                         </div>
@@ -148,19 +187,19 @@ function Users() {
                                 <div className="row">
                                     <div className="col-3 form-group">
                                         <label htmlFor="" className="">First Name</label>
-                                        <input onChange={(e) => { changeNewUserInput(e) }} type="text" value={newUserData.first_name} name='first_name' placeholder='Jone' className="form-control" />
+                                        <input required onChange={(e) => { changeNewUserInput(e) }} type="text" value={newUserData.first_name} name='first_name' placeholder='Jone' className="form-control" />
                                     </div>
                                     <div className="col-3 form-group">
                                         <label htmlFor="" className="">Last Name</label>
-                                        <input onChange={(e) => { changeNewUserInput(e) }} type="text" value={newUserData.last_name} name='last_name' placeholder='Doe' className="form-control" />
+                                        <input required onChange={(e) => { changeNewUserInput(e) }} type="text" value={newUserData.last_name} name='last_name' placeholder='Doe' className="form-control" />
                                     </div>
                                     <div className="col-3 form-group">
                                         <label htmlFor="" className="">Date Of Birth</label>
-                                        <input onChange={(e) => { changeNewUserInput(e) }} type="text" name='dob' value={newUserData.dob} placeholder='DD-MM-YYYY' className="form-control" />
+                                        <input required onChange={(e) => { changeNewUserInput(e) }} type="text" name='dob' value={newUserData.dob} placeholder='DD-MM-YYYY' className="form-control" />
                                     </div>
                                     <div className="col-3 form-group">
                                         <label htmlFor="" className="">Gender</label>
-                                        <select onChange={(e) => { changeNewUserInput(e) }} name="gender" className="form-control" value={newUserData.gender}>
+                                        <select required onChange={(e) => { changeNewUserInput(e) }} name="gender" className="form-control" value={newUserData.gender}>
                                             <option value="" style={{ display: 'none' }}>Select Gender</option>
                                             <option value="male">Male</option>
                                             <option value="female" >Female</option>
@@ -169,37 +208,41 @@ function Users() {
                                     </div>
                                     <div className="col-3 form-group">
                                         <label htmlFor="" className="">Email</label>
-                                        <input onChange={(e) => { changeNewUserInput(e) }} type="email" name='email' value={newUserData.email} placeholder='test@email.com' className="form-control" />
+                                        <input required onChange={(e) => { changeNewUserInput(e) }} type="email" name='email' value={newUserData.email} placeholder='test@email.com' className="form-control" />
                                     </div>
                                     <div className="col-3 form-group">
                                         <label htmlFor="" className="">Phone</label>
-                                        <input onChange={(e) => { changeNewUserInput(e) }} type="number" name='phone' value={newUserData.phone} placeholder='12345678' className="form-control" />
+                                        <input required onChange={(e) => { changeNewUserInput(e) }} type="number" name='phone' value={newUserData.phone} placeholder='12345678' min={1} className="form-control" />
                                     </div>
                                     <div className="col-3 form-group">
                                         <label htmlFor="" className="">Address</label>
-                                        <input onChange={(e) => { changeNewUserInput(e) }} type="text" name='address' value={newUserData.address} placeholder='Address' className="form-control" />
+                                        <input required onChange={(e) => { changeNewUserInput(e) }} type="text" name='address' value={newUserData.address} placeholder='Address' className="form-control" />
                                     </div>
-                                    <div className="col-3 form-group">
-                                        <label htmlFor="" className="">Card Number</label>
-                                        <input onChange={(e) => { changeNewUserInput(e) }} type="text" readOnly name='card_number' value={newUserData.card_number} placeholder='12345678' className="form-control" />
-                                    </div>
+                                    {selectedRole === 'Member' && (
+                                        <div className="col-3 form-group">
+                                            <label htmlFor="" className="">Card Number</label>
+                                            <input required onChange={(e) => { changeNewUserInput(e) }} type="text" readOnly name='card_number' value={newUserData.card_number} placeholder='12345678' className="form-control" />
+                                        </div>
+                                    )}
                                     <div className="col-3 form-group">
                                         <label htmlFor="" className="">Role Type</label>
-                                        <input onChange={(e) => { changeNewUserInput(e) }} type="text" value={newUserData.role_type} name='role_type' readOnly className="form-control" />
+                                        <input required onChange={(e) => { changeNewUserInput(e) }} type="text" value={newUserData.role_type} name='role_type' readOnly className="form-control" />
                                     </div>
                                     <div className="col-3 form-group">
                                         <label htmlFor="" className="">Start Date</label>
-                                        <input onChange={(e) => { changeNewUserInput(e) }} type="text" value={newUserData.start_date} name='start_date' readOnly className="form-control" />
+                                        <input required onChange={(e) => { changeNewUserInput(e) }} type="text" value={newUserData.start_date} name='start_date' readOnly className="form-control" />
                                     </div>
-                                    <div className="col-3 form-group">
-                                        <label htmlFor="" className="">Identity Card Image</label>
-                                        <input onChange={(e) => { changeNewUserInput(e) }} type="file" name="id_card" id="id_card" className="form-control" />
-                                    </div>
+                                    {selectedRole === 'Member' && (
+                                        <div className="col-3 form-group">
+                                            <label htmlFor="" className="">Identity Card Image</label>
+                                            <input required onChange={(e) => { changeNewUserInput(e) }} type="file" name="id_card" id="id_card" className="form-control" />
+                                        </div>
+                                    )}
                                 </div>
                             </form>
                         </div>
                         <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Close</button>
+                            <button type="button" class="btn btn-secondary btn-sm close_modal" data-bs-dismiss="modal">Close</button>
                             <button type="submit" form='newuserCreationForm' class="btn btn-primary btn-sm">Save changes</button>
                         </div>
                     </div>
