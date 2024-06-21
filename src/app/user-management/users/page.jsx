@@ -9,6 +9,33 @@ function Users() {
     const [roles, setroles] = useState(null);
     const router = useRouter();
     const [selectedRole, setselectedRole] = useState('');
+    const [newUserData, setnewUserData] = useState({
+        "first_name": '',
+        "last_name": '',
+        "dob": '',
+        "gender": '',
+        "email": '',
+        "phone": '',
+        "address": '',
+        "card_number": '',
+        "role_type": "",
+        "start_date": new Date().toLocaleDateString('en-IN', { day: 'numeric', month: 'long', year: 'numeric' }),
+        "id_card": '',
+    });
+
+    useEffect((e) => {
+        setnewUserData({ ...newUserData, 'role_type': selectedRole })
+    }, [selectedRole])
+    const changeNewUserInput = (e) => {
+        e.preventDefault();
+        const { name, value } = e.target;
+        console.log(name);
+        if (name !== 'id_card')
+            setnewUserData({ ...newUserData, [name]: value })
+        else
+            setnewUserData({ ...newUserData, [name]: e.target.files[0] })
+
+    }
     useEffect(() => {
         const getRoles = async () => {
             try {
@@ -27,6 +54,21 @@ function Users() {
         }
         getRoles();
     }, []);
+
+    const newUserCreation = async (e) => {
+        e.preventDefault();
+        let formData = new FormData();
+        Object.keys(newUserData).forEach((key) => {
+            formData.append(key, newUserData[key])
+        })
+        const response = await axios.post('/api/routes/user-management-api/users', formData, {
+            headers: {
+                "Content-Type": 'multipart/form-data',
+                Authorization: Cookies.get('token'),
+            }
+        })
+        console.log(response.data);
+    }
     return (
         <AuthLayout>
             <ul className="nav nav-tabs" id="myTab" role="tablist">
@@ -102,23 +144,23 @@ function Users() {
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
                         <div class="modal-body">
-                            <form className='forms-sample'>
+                            <form className='forms-sample' id='newuserCreationForm' name='newuserCreationForm' onSubmit={(e) => { newUserCreation(e) }}>
                                 <div className="row">
                                     <div className="col-3 form-group">
                                         <label htmlFor="" className="">First Name</label>
-                                        <input type="text" name='first_name' placeholder='Jone' className="form-control" />
+                                        <input onChange={(e) => { changeNewUserInput(e) }} type="text" value={newUserData.first_name} name='first_name' placeholder='Jone' className="form-control" />
                                     </div>
                                     <div className="col-3 form-group">
                                         <label htmlFor="" className="">Last Name</label>
-                                        <input type="text" name='last_name' placeholder='Doe' className="form-control" />
+                                        <input onChange={(e) => { changeNewUserInput(e) }} type="text" value={newUserData.last_name} name='last_name' placeholder='Doe' className="form-control" />
                                     </div>
                                     <div className="col-3 form-group">
                                         <label htmlFor="" className="">Date Of Birth</label>
-                                        <input type="text" name='dob' placeholder='DD-MM-YYYY' className="form-control" />
+                                        <input onChange={(e) => { changeNewUserInput(e) }} type="text" name='dob' value={newUserData.dob} placeholder='DD-MM-YYYY' className="form-control" />
                                     </div>
                                     <div className="col-3 form-group">
                                         <label htmlFor="" className="">Gender</label>
-                                        <select name="gender" className="form-control">
+                                        <select onChange={(e) => { changeNewUserInput(e) }} name="gender" className="form-control" value={newUserData.gender}>
                                             <option value="" style={{ display: 'none' }}>Select Gender</option>
                                             <option value="male">Male</option>
                                             <option value="female" >Female</option>
@@ -127,38 +169,38 @@ function Users() {
                                     </div>
                                     <div className="col-3 form-group">
                                         <label htmlFor="" className="">Email</label>
-                                        <input type="email" name='email' placeholder='test@email.com' className="form-control" />
+                                        <input onChange={(e) => { changeNewUserInput(e) }} type="email" name='email' value={newUserData.email} placeholder='test@email.com' className="form-control" />
                                     </div>
                                     <div className="col-3 form-group">
                                         <label htmlFor="" className="">Phone</label>
-                                        <input type="number" name='phone' placeholder='12345678' className="form-control" />
+                                        <input onChange={(e) => { changeNewUserInput(e) }} type="number" name='phone' value={newUserData.phone} placeholder='12345678' className="form-control" />
                                     </div>
                                     <div className="col-3 form-group">
                                         <label htmlFor="" className="">Address</label>
-                                        <input type="text" name='address' placeholder='Address' className="form-control" />
+                                        <input onChange={(e) => { changeNewUserInput(e) }} type="text" name='address' value={newUserData.address} placeholder='Address' className="form-control" />
                                     </div>
                                     <div className="col-3 form-group">
                                         <label htmlFor="" className="">Card Number</label>
-                                        <input type="text" readOnly name='card_number' placeholder='12345678' className="form-control" />
+                                        <input onChange={(e) => { changeNewUserInput(e) }} type="text" readOnly name='card_number' value={newUserData.card_number} placeholder='12345678' className="form-control" />
                                     </div>
                                     <div className="col-3 form-group">
                                         <label htmlFor="" className="">Role Type</label>
-                                        <input type="text" name='role_type' value={selectedRole} readOnly className="form-control" />
+                                        <input onChange={(e) => { changeNewUserInput(e) }} type="text" value={newUserData.role_type} name='role_type' readOnly className="form-control" />
                                     </div>
                                     <div className="col-3 form-group">
                                         <label htmlFor="" className="">Start Date</label>
-                                        <input type="text" name='start_date' value={new Date().toLocaleDateString('en-IN', {day:'numeric',month:'long',year:'numeric'})} readOnly className="form-control" />
+                                        <input onChange={(e) => { changeNewUserInput(e) }} type="text" value={newUserData.start_date} name='start_date' readOnly className="form-control" />
                                     </div>
                                     <div className="col-3 form-group">
                                         <label htmlFor="" className="">Identity Card Image</label>
-                                        <input type="file" name="id_card" id="id_card" className="form-control" />
+                                        <input onChange={(e) => { changeNewUserInput(e) }} type="file" name="id_card" id="id_card" className="form-control" />
                                     </div>
                                 </div>
                             </form>
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Close</button>
-                            <button type="button" class="btn btn-primary btn-sm">Save changes</button>
+                            <button type="submit" form='newuserCreationForm' class="btn btn-primary btn-sm">Save changes</button>
                         </div>
                     </div>
                 </div>
