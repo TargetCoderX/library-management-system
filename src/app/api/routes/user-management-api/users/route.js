@@ -57,7 +57,7 @@ export const POST = async (request) => {
             })
             createUser.save();
             const token = await createOneTimeUrl();
-            const url = `${process.env.APP_URL}/external/generate-password/${token}`
+            const url = `${process.env.APP_URL}/externals/generate-password/${token}`
             accountMailer(formData.get('email').trim().toLowerCase(), 'New User Account Created', "", `
             Hi ${formData.get('first_name')} <br>
             Welcome to ${process.env.APP_NAME}<br>
