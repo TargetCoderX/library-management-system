@@ -4,6 +4,7 @@ import axios from 'axios';
 import Cookies from 'js-cookie';
 import { useRouter } from 'next/navigation';
 import React, { useEffect, useState } from 'react';
+import { confirmAlert } from 'react-confirm-alert';
 import { toast } from 'react-toastify';
 
 function Users() {
@@ -72,15 +73,35 @@ function Users() {
     }
 
     const filterUser = (data, role_name) => {
-        let flag = false;
-        data.forEach(element => {
-            if (element._id.toLowerCase() == role_name.toLowerCase()) {
-                flag = true;
-                setallUsers(element.users);
-            }
-            if (flag == false) {
-                setallUsers([]);
-            }
+        if (data.length > 0) {
+            let flag = false;
+            data.forEach(element => {
+                if (element._id.toLowerCase() == role_name.toLowerCase()) {
+                    flag = true;
+                    setallUsers(element.users);
+                }
+                if (flag == false) {
+                    setallUsers([]);
+                }
+            });
+        } else {
+            setallUsers([]);
+        }
+    }
+
+    const resetForm = () => {
+        setnewUserData({
+            "first_name": '',
+            "last_name": '',
+            "dob": '',
+            "gender": '',
+            "email": '',
+            "phone": '',
+            "address": '',
+            "card_number": '',
+            "role_type": selectedRole,
+            "start_date": new Date().toLocaleDateString('en-IN', { day: 'numeric', month: 'long', year: 'numeric' }),
+            "id_card": '',
         });
     }
 
@@ -101,20 +122,57 @@ function Users() {
         else
             toast.error(response.data.message)
 
+        document.querySelector('.close_modal').click();
+        resetForm()
+        getAllUsers();
+    }
+
+    const deleteUser = async (user_id) => {
+        confirmAlert({
+            title: 'Confirm to Delete',
+            message: 'Are you sure to delete this user.',
+            buttons: [
+                {
+                    label: 'Yes',
+                    onClick: async () => {
+                        let response = await axios.delete('/api/routes/user-management-api/users', {
+                            headers: {
+                                "Content-Type": 'application/json',
+                                Authorization: Cookies.get('token')
+                            },
+                            data: { user_id }
+                        })
+                        if (response.data.status == 1) {
+                            toast.success(response.data.message);
+                            getAllUsers();
+                        } else {
+                            toast.error(response.data.message);
+                        }
+                    }
+                },
+                {
+                    label: 'No',
+                    onClick: () => { }
+                }
+            ]
+        });
+    }
+
+    const editUser = (user_data) => {
         setnewUserData({
-            "first_name": '',
-            "last_name": '',
-            "dob": '',
-            "gender": '',
-            "email": '',
-            "phone": '',
-            "address": '',
-            "card_number": '',
-            "role_type": "",
+            "user_id": user_data._id,
+            "first_name": user_data.first_name,
+            "last_name": user_data.last_name,
+            "dob": user_data.dob,
+            "gender": user_data.gender,
+            "email": user_data.email,
+            "phone": user_data.phone,
+            "address": user_data.address,
+            "card_number": user_data.card_number || '',
+            "role_type": selectedRole,
             "start_date": new Date().toLocaleDateString('en-IN', { day: 'numeric', month: 'long', year: 'numeric' }),
             "id_card": '',
         });
-        document.querySelector('.close_modal').click();
     }
 
     return (
@@ -131,7 +189,7 @@ function Users() {
                     <div className={`tab-pane fade ${index == 0 ? 'show active' : ''}`} id={`tab_pane_${element._id}`} role="tabpanel" aria-labelledby={element._id} tabindex="0">
                         <div className="row">
                             <div className="col-md-12 text-end m-2">
-                                <button onClick={(e) => { setselectedRole(element.role_name) }} className="btn btn-primary text-uppercase btn-sm" data-bs-toggle="modal" data-bs-target="#userAdderUpdaterModal">
+                                <button onClick={(e) => { setselectedRole(element.role_name), resetForm() }} className="btn btn-primary text-uppercase btn-sm" data-bs-toggle="modal" data-bs-target="#userAdderUpdaterModal">
                                     <i className='fa fa-plus me-2'></i>
                                     Add {element.role_name}
                                 </button>
@@ -164,7 +222,8 @@ function Users() {
                                             <td>{element.card_number}</td>
                                             <td>{element.start_date}</td>
                                             <td>
-                                                <button className="btn btn-danger btn-sm">Delete</button>
+                                                <button className="btn btn-warning btn-sm me-2" onClick={() => { editUser(element) }} data-bs-toggle="modal" data-bs-target="#userAdderUpdaterModal">Edit</button>
+                                                <button className="btn btn-danger btn-sm" onClick={() => { deleteUser(element._id) }}>Delete</button>
                                             </td>
                                         </tr>
 

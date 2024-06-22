@@ -4,10 +4,16 @@ const userSchema = new Schema({
     "first_name": {
         type: String,
         required: true,
+        set: (value) => {
+            return value.trim().charAt(0).toUpperCase() + value.trim().substr(1).toLowerCase()
+        }
     },
     "last_name": {
         type: String,
         required: true,
+        set: (value) => {
+            return value.trim().charAt(0).toUpperCase() + value.trim().substr(1).toLowerCase()
+        }
     },
     "dob": {
         type: String,

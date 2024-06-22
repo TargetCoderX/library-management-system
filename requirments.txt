@@ -11,3 +11,11 @@ Providing alerts for overdue items
 Storing and retrieving information about patrons, such as their name and ID number
 Allowing patrons to request books that aren't available in the library
 Providing a payment option for membership fees and late fees 
+
+
+
+
+next thing to do
+======================================================================================================================
+new user password creation
+and user login
