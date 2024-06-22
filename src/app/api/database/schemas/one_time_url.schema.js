@@ -5,6 +5,10 @@ export const oneTimeUrlSchema = Schema({
         type: String,
         required: true,
     },
+    "user_id": {
+        type: String,
+        required: true,
+    },
     "expire_time": {
         type: String,
         required: true,
