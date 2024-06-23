@@ -6,6 +6,8 @@ const paths = [
     '/dashboard',
     '/user-management/role-management',
     '/user-management/users',
+    '/book-management/book-list',
+    '/book-management/book-timeline',
 ];
 export const protectedRoute = async (request) => {
     const { pathname } = request.nextUrl;

@@ -27,7 +27,24 @@ function Sidebar() {
                                 <Link className={`nav-link ${pathname == '/user-management/role-management' ? 'active' : ''}`} href="/user-management/role-management">Role Management</Link>
                             </li>
                             <li className="nav-item">
-                                <Link  className={`nav-link ${pathname == '/user-management/users' ? 'active' : ''}`} href="/user-management/users">Users</Link>
+                                <Link className={`nav-link ${pathname == '/user-management/users' ? 'active' : ''}`} href="/user-management/users">Users</Link>
+                            </li>
+                        </ul>
+                    </div>
+                </li>
+                <li className={`nav-item ${pathname.startsWith('/book-management') ? 'active' : ''}`}>
+                    <a className={`nav-link ${!pathname.startsWith('/book-management') ? 'collapsed' : ''}`} data-bs-toggle="collapse" href="#ui-basic" aria-expanded="false" aria-controls="ui-basic">
+                        <i className="menu-icon mdi mdi-floor-plan"></i>
+                        <span className="menu-title" style={{ fontSize: '14px' }}>Book Management</span>
+                        <i className="menu-arrow"></i>
+                    </a>
+                    <div className={`collapse ${pathname.startsWith('/book-management') ? 'show' : ''}`} id="ui-basic">
+                        <ul className="nav flex-column sub-menu">
+                            <li className={`nav-item`}>
+                                <Link className={`nav-link ${pathname == '/book-management/book-list' ? 'active' : ''}`} href="/book-management/book-list">Book List</Link>
+                            </li>
+                            <li className="nav-item">
+                                <Link className={`nav-link ${pathname == '/book-management/book-timeline' ? 'active' : ''}`} href="/book-management/book-timeline">Book Timeline</Link>
                             </li>
                         </ul>
                     </div>
