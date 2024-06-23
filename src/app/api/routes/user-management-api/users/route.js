@@ -57,12 +57,15 @@ export const POST = async (request) => {
             })
             let response = await createUser.save()
             const token = await createOneTimeUrl(response._id);
-            const url = `${process.env.APP_URL}/externals/generate-password/${response._id}/${token}`
+            const linkExpireTime = Date.now() + 3600000;
+            const url = `${process.env.APP_URL}/externals/generate-password/${response._id}/${token}/${linkExpireTime}`
             accountMailer(formData.get('email').trim().toLowerCase(), 'New User Account Created', "", `
             Hi ${formData.get('first_name')} <br>
             Welcome to ${process.env.APP_NAME}<br>
             We're excited to have you on board. Your account has been successfully created, and you're now part of our community.<br>
             Please click the below link to generate your password <br> ${url}
+            <br>
+            <h3>Link is valid only for one hour</h3>
             `, (error, info) => {
                 if (error) {
                     // console.log(error);

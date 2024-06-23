@@ -6,7 +6,6 @@ import React, { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 
 function genrate_password({ params }) {
-
   const router = useRouter();
   const [passwords, setpasswords] = useState({
     password: '',
