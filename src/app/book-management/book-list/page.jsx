@@ -1,13 +1,23 @@
 "use client"
 import AuthLayout from '@/app/layouts/AuthLayout';
-import React from 'react';
+import React, { useState } from 'react';
+import FileUploader from '../components/dropzone/FileUploader';
+import Booklist from '../components/booklist/Booklist';
 
 function book_list() {
     const tempCount = 25;
+    const [isFileUploader, setisFileUploader] = useState(false);
+    const closeModal = () => {
+        document.getElementById("modelCloseButton").click();
+    }
     return (
         <AuthLayout>
             <div className="row">
-                {Array.from({length:tempCount}).map(() => (
+                <div className="col-md-12 text-end mb-5 d-flex justify-content-end">
+                    <button className="btn btn-primary btn-sm ml-auto me-2" onClick={() => { setisFileUploader(false) }} data-bs-toggle="modal" data-bs-target="#bookListModal">Add New Book</button>
+                    <button className="btn btn-primary btn-sm" onClick={() => { setisFileUploader(true) }} data-bs-toggle="modal" data-bs-target="#bookListModal">Upload Book List</button>
+                </div>
+                {Array.from({ length: tempCount }).map(() => (
                     <div className="col-md-3 mb-5">
                         <div className="card">
                             <span className="position-absolute top-0 start-50 translate-middle badge rounded-pill bg-danger">
@@ -23,8 +33,22 @@ function book_list() {
                     </div>
 
                 ))}
+
+                <div className="modal fade" id="bookListModal" tabindex="-1" aria-labelledby="bookListModalLabel" aria-hidden="true">
+                    <div className="modal-dialog modal-dialog-centered modal-md">
+                        <div className="modal-content">
+                            <div className="modal-header">
+                                <h1 className="modal-title fs-5" id="bookListModalLabel">{isFileUploader ? "File Uploader" : "Add New Book"}</h1>
+                                <button type="button" id='modelCloseButton' className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div className="modal-body">
+                                {isFileUploader ? (<FileUploader closemodel={closeModal} />) : (<Booklist closemodel={closeModal} />)}
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
-        </AuthLayout>
+        </AuthLayout >
     );
 }
 

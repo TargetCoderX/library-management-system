@@ -6,6 +6,8 @@ import { NextResponse } from "next/server";
 const paths = [
     '/api/routes/user-management-api/role-management',
     '/api/routes/user-management-api/users',
+    '/api/routes/book-management-api/book-management',
+    '/api/routes/book-management-api/book-timeline',
 ]
 export const authTokenChecker = async (request) => {
     const { pathname } = request.nextUrl;
