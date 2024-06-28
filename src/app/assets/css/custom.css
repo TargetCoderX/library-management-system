@@ -1,0 +1,19 @@
+.multiline-ellipsis {
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 3;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-height: 4.5em; /* Approximate height for 3 lines */
+    line-height: 1.5em; /* Line height for calculation */
+  }
+
+.multiline-ellipsis-title {
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 1;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-height: 4.5em; /* Approximate height for 3 lines */
+    line-height: 1.5em; /* Line height for calculation */
+  }

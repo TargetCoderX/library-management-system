@@ -26,6 +26,12 @@ export const POST = async (request) => {
         return NextResponse.json({ status: 0, message: "Something went wrong", error })
     }
 }
+
+export const GET = async () => {
+    const data = await bookManagement.find();
+    return NextResponse.json({ status: 1, message: "book fetched successfully", books: data });
+}
+
 const uploadFile = async (data) => {
     let filename = ''
     if (data.get("cover_image") !== '') {

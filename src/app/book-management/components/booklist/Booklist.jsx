@@ -4,20 +4,31 @@ import Cookies from 'js-cookie';
 import React, { useState } from 'react';
 import { toast } from 'react-toastify';
 
-function Booklist({ closemodel }) {
+function Booklist({ closemodel, getAllBooks }) {
+    const randomStringGenerator = (length) => {
+        let result = '';
+        const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+        const charactersLength = characters.length;
+        for (let i = 0; i < length; i++) {
+            result += characters.charAt(Math.floor(Math.random() * charactersLength));
+        }
+        return result;
+    }
+
     const [newBookform, setnewBookform] = useState({
         "book_name": "",
         "book_description": "",
         "author": "",
-        "isbn": "",
+        "isbn": randomStringGenerator(3),
         "publisher": "",
         "publish_date": "",
         "edition": "",
         "genre": "",
         "status": "Active",
         "acquisition_date": "",
-        "cover_image": "",
+        "cover_image": null,
     });
+
     const handleformOnChange = (e) => {
         const { name, value } = e.target;
         if (name !== "cover_image")
@@ -39,6 +50,20 @@ function Booklist({ closemodel }) {
         if (response.data.status === 1) {
             toast.success(response.data.message);
             closemodel();
+            setnewBookform({
+                "book_name": "",
+                "book_description": "",
+                "author": "",
+                "isbn": randomStringGenerator(3),
+                "publisher": "",
+                "publish_date": "",
+                "edition": "",
+                "genre": "",
+                "status": "Active",
+                "acquisition_date": "",
+                "cover_image": null,
+            })
+            getAllBooks();
         }
         else
             toast.error(response.data.message);
@@ -73,7 +98,7 @@ function Booklist({ closemodel }) {
                 </div>
                 <div className="col-md-6">
                     <div className="form-group">
-                        <input type="text" className='form-control' onChange={(e) => { handleformOnChange(e) }} placeholder='Publication Date' name="publish_date" value={newBookform.publish_date} id="publish_date" />
+                        <input type="date" className='form-control' onChange={(e) => { handleformOnChange(e) }} placeholder='Publication Date' name="publish_date" value={newBookform.publish_date} id="publish_date" />
                     </div>
                 </div>
                 <div className="col-md-6">
@@ -93,7 +118,7 @@ function Booklist({ closemodel }) {
                 </div>
                 <div className="col-md-6">
                     <div className="form-group">
-                        <input type="text" className='form-control' onChange={(e) => { handleformOnChange(e) }} placeholder='Acquisition Date' name="acquisition_date" value={newBookform.acquisition_date} id="acquisition_date" />
+                        <input type="date" className='form-control' onChange={(e) => { handleformOnChange(e) }} placeholder='Acquisition Date' name="acquisition_date" value={newBookform.acquisition_date} id="acquisition_date" />
                     </div>
                 </div>
                 <div className="col-md-12">
