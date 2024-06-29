@@ -37,3 +37,8 @@ next-env.d.ts
 
 # requirments file
 requirments.txt
+
+/storage/book_image/*
+/storage/id_cards/*
+!/storage/book_image/noimage.jpg
+

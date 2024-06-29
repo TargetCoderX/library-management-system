@@ -44,7 +44,7 @@ const bookManagementSchema = new Schema({
     },
     "cover_image": {
         type: String,
-        required: true,
+        // required: true,
     },
 })
 
