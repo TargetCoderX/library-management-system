@@ -41,4 +41,5 @@ requirments.txt
 /storage/book_image/*
 /storage/id_cards/*
 !/storage/book_image/noimage.jpg
+!/storage/book_image/.gitkeep
 
