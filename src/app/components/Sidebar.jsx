@@ -44,7 +44,7 @@ function Sidebar() {
                                 <Link className={`nav-link ${pathname == '/book-management/book-list' ? 'active' : ''}`} href="/book-management/book-list">Book List</Link>
                             </li>
                             <li className="nav-item">
-                                <Link className={`nav-link ${pathname == '/book-management/book-timeline' ? 'active' : ''}`} href="/book-management/book-timeline">Book Timeline</Link>
+                                <Link className={`nav-link ${pathname == '/book-management/circulation' ? 'active' : ''}`} href="/book-management/circulation">Circulation</Link>
                             </li>
                         </ul>
                     </div>
