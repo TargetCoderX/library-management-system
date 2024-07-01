@@ -25,6 +25,11 @@ const circulationSchema = new Schema({
         type: Number,
         required: true,
         default: 1,
+    },
+    "fine": {
+        type: Number,
+        required: true,
+        default: 0
     }
 })
 export const circulationModel = mongoose.models.circulation || mongoose.model('circulation', circulationSchema);
