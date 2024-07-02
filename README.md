@@ -4,6 +4,8 @@
 ### Overview
 The Library Management System is a comprehensive and user-friendly application designed to streamline the operations of a library. This system provides librarians and users with a robust platform to manage books, track borrowed and returned items, maintain user records, and facilitate the efficient operation of library activities.
 
+### Improvements to this project will be made regularly
+
 
 ## Features
 
