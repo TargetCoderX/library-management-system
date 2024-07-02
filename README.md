@@ -1,5 +1,5 @@
 
-# Library Management System
+# Library Management Sysyem
 
 ### Overview
 The Library Management System is a comprehensive and user-friendly application designed to streamline the operations of a library. This system provides librarians and users with a robust platform to manage books, track borrowed and returned items, maintain user records, and facilitate the efficient operation of library activities.
@@ -59,6 +59,13 @@ MAILER1_PORT=587
 
 ```
 npm run dev
+```
+
+### on running application a new user will create autonatically ad admin
+access the route /admin/login
+```
+Email: test@gmail.com
+password: 12345678
 ```
     
 ## Contributing
