@@ -3,7 +3,7 @@ import AuthLayout from '@/app/layouts/AuthLayout';
 import axios from 'axios';
 import Cookies from 'js-cookie';
 import { useRouter } from 'next/navigation';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { confirmAlert } from 'react-confirm-alert';
 import { toast } from 'react-toastify';
 
@@ -13,6 +13,15 @@ function Users() {
     const [selectedRole, setselectedRole] = useState('Administrator');
     const [allUsers, setallUsers] = useState(null);
     const [apiUsers, setapiUsers] = useState(null);
+    const cardNumberGenerate = (length) => {
+        const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+        let result = "";
+        for (let i = 0; i < length; i++) {
+            result += chars.charAt(Math.floor(Math.random() * chars.length));
+        }
+        return result;
+    }
+    const cardNumber = useMemo(() => cardNumberGenerate(10), [selectedRole]);
     const [newUserData, setnewUserData] = useState({
         "first_name": '',
         "last_name": '',
@@ -21,7 +30,7 @@ function Users() {
         "email": '',
         "phone": '',
         "address": '',
-        "card_number": '',
+        "card_number": selectedRole === "Member" ? cardNumber : "",
         "role_type": "",
         "start_date": new Date().toLocaleDateString('en-IN', { day: 'numeric', month: 'long', year: 'numeric' }),
         "id_card": '',
@@ -98,7 +107,7 @@ function Users() {
             "email": '',
             "phone": '',
             "address": '',
-            "card_number": '',
+            "card_number": selectedRole === "Member" ? cardNumber : "",
             "role_type": selectedRole,
             "start_date": new Date().toLocaleDateString('en-IN', { day: 'numeric', month: 'long', year: 'numeric' }),
             "id_card": '',
@@ -294,7 +303,7 @@ function Users() {
                                     {selectedRole === 'Member' && (
                                         <div className="col-3 form-group">
                                             <label htmlFor="" className="">Identity Card Image</label>
-                                            <input required onChange={(e) => { changeNewUserInput(e) }} type="file" name="id_card" id="id_card" className="form-control" />
+                                            <input {...(!newUserData.user_id && { required: true })} onChange={(e) => { changeNewUserInput(e) }} type="file" name="id_card" id="id_card" className="form-control" />
                                         </div>
                                     )}
                                 </div>

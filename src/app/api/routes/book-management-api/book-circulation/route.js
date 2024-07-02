@@ -6,7 +6,7 @@ import { NextResponse } from "next/server";
 export const GET = async () => {
     try {
         /* get all users */
-        const users = await userModel.find().select("first_name last_name _id");
+        const users = await userModel.find({"role":"Member"}).select("first_name last_name _id");
         /* getting active books */
         const books = await bookManagement.find({ "status": 'Active' }).select("book_name _id author");
 
